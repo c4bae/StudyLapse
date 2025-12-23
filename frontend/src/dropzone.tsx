@@ -1,17 +1,29 @@
 import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { useUser } from '@clerk/clerk-react'
 
 function DropZonePage() {
-    const onDrop = useCallback( async (acceptedFiles: File[]) => {
-        for(let i = 0; i < acceptedFiles.length; i++) {
-            const response = await fetch("/api/videos", {
-                method: "POST",
-                body: acceptedFiles[i],
-            })
+    const { isSignedIn, user } = useUser()
 
-            console.log(response)
+    const onDrop = useCallback( async (acceptedFiles: File[]) => {
+        if (user) {
+            for(let i = 0; i < acceptedFiles.length; i++) {
+                const formData = new FormData()
+                const payload = {video: acceptedFiles[i], id: user!.id}
+                formData.append('payload', JSON.stringify(payload))
+
+                const response = await fetch("/api/upload", {
+                    method: "POST",
+                    body: formData
+                })
+
+                console.log(response)
+            }
         }
-    }, [])
+        else {
+            console.log("User not logged in.")
+        }
+    }, [user])
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
         onDrop, 
@@ -22,16 +34,14 @@ function DropZonePage() {
     })
 
     return (
-        <form className="border">
-            <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {
-                    isDragActive ?
-                        <p>Drag files here</p> :
-                        <p>Drag and drop files, or select here to open file explorer</p>
-                }
-            </div>
-        </form>
+        <div className={"border-5"} {...getRootProps()}>
+            <input {...getInputProps()} />
+            {
+                isDragActive ?
+                    <p>Drag files here</p> :
+                    <p>Drag and drop files, or select here to open file explorer</p>
+            }
+        </div>
     )
 }
 

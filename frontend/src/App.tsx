@@ -10,9 +10,9 @@ function App() {
     return (
         <>
             <DropZonePage></DropZonePage>
-            {/* <Background></Background>
+            <Background></Background>
         
-            <BrowserRouter>
+            {/* <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Hero />}></Route>
                 <Route path="/sign-up" element={<SignUpForm />}></Route>

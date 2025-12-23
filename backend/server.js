@@ -1,11 +1,28 @@
 import { verifyWebhook } from '@clerk/express/webhooks'
 import express from 'express'
 import 'dotenv/config'
-import fs from 'fs'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import multer from 'multer'
+import multerS3 from 'multer-s3'
 
 const app = express()
-const s3 = new S3Client({ region: process.env.region })
+const s3 = new S3Client({ region: process.env.AWS_REGION })
+
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'studylapsedata',
+        metadata: function (req, payload, cb) {
+            payload = JSON.parse(payload)
+            cb(null, { fieldName: payload.video.fieldname })
+        },
+        key: function (req, payload, cb) {
+            payload = JSON.parse(payload)
+            console.log(payload);
+            cb(null, `${payload.id}/${payload.video.originalname}}`);
+        }
+    })
+})
 
 async function createUserFolder(userID) {
     const command = new PutObjectCommand({
@@ -27,8 +44,9 @@ app.listen(port, () => {
     console.log("Server running on port", port)
 })
 
-app.post('/api/videos', express.raw({type: '/*'}), (req, res) => {
-    console.log(req)
+app.post('/api/upload', upload.array('payload', 10), (req, res) => {
+    console.log(req.files)
+    res.send("Uploaded successfully")
 })
 
 // app.post --> backend retrieves data, app.get --> backend sends data, think of app as the browser or frontend
