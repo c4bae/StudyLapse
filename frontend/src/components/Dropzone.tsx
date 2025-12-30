@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import { useUser } from '@clerk/clerk-react'
 
 function DropZonePage() {
-    const { isSignedIn, user } = useUser()
+    const { user } = useUser()
 
     const onDrop = useCallback( async (acceptedFiles: File[]) => {
         if (user) {
@@ -30,7 +30,8 @@ function DropZonePage() {
         accept: {
             'video/*': [],
         },
-        maxSize: 3.5 * 100000000
+        maxSize: 3.5 * 100000000,
+        maxFiles: 1
     })
 
     return (

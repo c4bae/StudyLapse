@@ -81,8 +81,7 @@ app.listen(port, () => {
     console.log("Server running on port", port)
 })
 
-app.post('/api/upload', upload.array('payload', 10), (req, res) => {
-    console.log(req.files)
+app.post('/api/upload', upload.single('payload'), (req, res) => {
     res.send("Uploaded successfully")
 })
 
