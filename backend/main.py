@@ -1,7 +1,7 @@
 import torch
 
 from fastapi import FastAPI
-
+from pydantic import BaseModel
 
 app = FastAPI()
 device = torch.device("mps")
@@ -19,6 +19,16 @@ def test_model(model, loader, pre_trained_path, num_images=12):
             outputs = model(inputs)
 
             _, preds = torch.max(outputs, 1)
+
+class video_data(BaseModel):
+    id: str
+    video_name: str
+
+@app.post("/api/process")
+async def analyze_video(video_data: video_data):
+    
+    return "Payload received"
+
 
 
 
