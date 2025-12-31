@@ -20,13 +20,10 @@ const upload = multer({
         s3: s3,
         bucket: 'studylapsedata',
         metadata: function (req, payload, cb) {
-            payload = JSON.parse(payload)
-            cb(null, { fieldName: payload.video.fieldname })
+            cb(null, { fieldName: payload.fieldname })
         },
         key: function (req, payload, cb) {
-            payload = JSON.parse(payload)
-            console.log(payload);
-            cb(null, `${payload.id}/${payload.video.originalname}}`);
+            cb(null, `${req.body.id}/${payload.originalname}`);
         }
     })
 })
@@ -81,7 +78,13 @@ app.listen(port, () => {
     console.log("Server running on port", port)
 })
 
-app.post('/api/upload', upload.single('payload'), (req, res) => {
+app.post('/api/upload', upload.array('payload', 1), async (req, res) => {
+    const body = {id: req.body.id, video_name: req.files[0].originalname}
+    const response = await fetch("http://127.0.0.1:8000/api/process", {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    })
     res.send("Uploaded successfully")
 })
 

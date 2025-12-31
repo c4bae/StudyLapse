@@ -5,20 +5,18 @@ import { useUser } from '@clerk/clerk-react'
 function DropZonePage() {
     const { user } = useUser()
 
-    const onDrop = useCallback( async (acceptedFiles: File[]) => {
+    const onDrop = useCallback( async (acceptedFile: File[]) => {
         if (user) {
-            for(let i = 0; i < acceptedFiles.length; i++) {
-                const formData = new FormData()
-                const payload = {video: acceptedFiles[i], id: user!.id}
-                formData.append('payload', JSON.stringify(payload))
+            const formData = new FormData()
+            formData.append('id', user?.id)
+            formData.append('payload', acceptedFile[0])
 
-                const response = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData
-                })
+            const response = await fetch("/api/upload", {
+                method: "POST",
+                body: formData
+            })
 
-                console.log(response)
-            }
+            console.log(response)
         }
         else {
             console.log("User not logged in.")
