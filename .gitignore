@@ -27,3 +27,11 @@ dist-ssr
 # Training Data
 data
 videos
+models
+yolov8n.pt
+
+# User Data
+user_videos
+
+# Testing files
+sam3_model.py
