@@ -1,13 +1,16 @@
 import { verifyWebhook } from '@clerk/express/webhooks'
 import express from 'express'
 import 'dotenv/config'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
 import multer from 'multer'
 import multerS3 from 'multer-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 import { createClient } from '@supabase/supabase-js'
 
 const app = express()
+app.use(express.json())
+
 const s3 = new S3Client({ region: process.env.AWS_REGION })
 
 const supabaseURL = process.env.SUPABASE_URL
@@ -23,7 +26,7 @@ const upload = multer({
             cb(null, { fieldName: payload.fieldname })
         },
         key: function (req, payload, cb) {
-            cb(null, `${req.body.id}/${payload.originalname}`);
+            cb(null, `${req.body.user_id}/${payload.originalname}`);
         }
     })
 })
@@ -79,7 +82,7 @@ app.listen(port, () => {
 })
 
 app.post('/api/upload', upload.array('payload', 1), async (req, res) => {
-    const body = {id: req.body.id, video_name: req.files[0].originalname}
+    const body = {user_id: req.body.user_id, video_name: req.files[0].originalname}
     const response = await fetch("http://127.0.0.1:8000/api/process", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -109,4 +112,22 @@ app.post('/api/webhooks', express.raw({type: 'application/json'}), async (req, r
         console.error('Error verifying webhook: ', err)
         return res.status(400).send('Error verifying webhook')
     }
+})
+
+app.post('/api/media', async (req, res) => {
+    const img_command = new GetObjectCommand({
+        Bucket: 'studylapsedata',
+        Key: req.body.imgPath
+    })
+
+    const vid_command = new GetObjectCommand({
+        Bucket: 'studylapsedata',
+        Key: req.body.vidPath
+    })
+
+    const imgUrl = await getSignedUrl(s3, img_command, { expiresIn: 3600 })
+    const vidUrl = await getSignedUrl(s3, vid_command, { expiresIn: 3600 })
+
+    const fileUrls = {img: imgUrl, vid: vidUrl}
+    res.send(fileUrls)
 })
