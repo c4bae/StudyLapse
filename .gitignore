@@ -29,6 +29,7 @@ data
 videos
 models
 yolov8n.pt
+__pycache__
 
 # User Data
 user_videos
