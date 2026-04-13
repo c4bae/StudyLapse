@@ -1,5 +1,6 @@
 <div align="center">
   <h1>StudyLapse</h1>
+  <p>AI powered study analytics from your timelapse videos.</p>
 </div> 
 
 <p align="center">
