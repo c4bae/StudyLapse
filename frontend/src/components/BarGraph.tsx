@@ -19,17 +19,17 @@ import {
 export const description = "A bar chart"
 
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "January", desktop: 100 },
+  { month: "February", desktop: 143 },
+  { month: "March", desktop: 83 },
+  { month: "April", desktop: 81 },
+  { month: "May", desktop: 32 },
+  { month: "June", desktop: 45 },
 ]
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Hours",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig
@@ -39,7 +39,7 @@ export default function BarGraph({ fullName }) {
     <Card className="border-transparent bg-base-100 font-[DM_Sans]">
       <CardHeader>
         <CardTitle className="font-bold text-3xl text-neutral-700">Welcome back, {fullName}</CardTitle>
-        <CardDescription>Here's how your study habits are showing up for this week:</CardDescription>
+        <CardDescription>Here's how your study habits are showing up for this past 6 months:</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="w-full h-60">
