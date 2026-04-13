@@ -21,8 +21,6 @@
   </kbd>
 </p>
 
-Upload a timelapse of your study session and get AI-powered insights on focus time, absences, and phone usage — with an interactive video player that highlights exactly when each event occurred.
-
 ## Tech Stack
 
 **Frontend:** React, TypeScript, Vite, Tailwind CSS, Framer Motion
