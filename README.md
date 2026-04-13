@@ -23,8 +23,11 @@ Upload a timelapse of your study session and get AI-powered insights on focus ti
 ## Tech Stack
 
 **Frontend:** React, TypeScript, Vite, Tailwind CSS, Framer Motion
+
 **Backend:** FastAPI (Python), Express.js
+
 **AI:** YOLOv8 (person detection), Custom PyTorch CNN (phone classification)
+
 **Infrastructure:** Supabase (PostgreSQL), AWS S3, Clerk Auth
 
 ---
