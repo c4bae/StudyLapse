@@ -1,4 +1,6 @@
-# StudyLapse
+<div align="center">
+  <h1>StudyLapse</h1>
+</div> 
 
 <p align="center">
   <kbd>
